@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+<div style="background-size: cover; background-image: url('../static/wooden_background.jpg'); width: 100%; height: 100%;">
+    {% if announcement != "" %}
+        <h1 style="text-align: center; color: black; background-color: white;">{{ announcement }}</h1>
+    {% endif %}
+    <div class="centered-div" id="name-div">
+        <form action="/word" method="post">
+            <input type="text" name="player1" id="player1" autocomplete="off" autofocus placeholder="Player1's name" style="padding-right: 10px; padding-left: 10px; border: 2px solid white;" class="btn btn-warning">
+            <input type="text" name="player2" id="player2" autocomplete="off" placeholder="Player2's name" style="padding-right: 10px; padding-left: 10px; border: 2px solid white;" class="btn btn-warning">
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn btn-success" type="submit" id="name-btn" onclick="add_name()" style="border: 3px solid white; font-size: 20px;">Add Name</button>
+            </div>
+        </form>
+    </div>
+    <div style="text-align :center; margin-top: 0px;">
+        <h1 class="btn btn-light copyright">&copy; 2023 Duyanh,Inc.</h1>
+    </div>
+</div>
+{% endblock %}

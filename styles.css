@@ -1,0 +1,350 @@
+.my-background {
+    /*background-color: #948779;
+    z-index: 0;*/
+    background-image: url('../static/wooden_background.jpg');
+  }
+.centered-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  }
+
+.guess-box {
+ /* Set maximum width for the container */
+  width: 600px;
+  padding: 20px; /* Add padding for spacing */
+  border: 10px solid #9cccb9; /* Add a border for visual separation */
+  background-color: #000;
+  margin-top: 100px;
+}
+
+.form-box {
+  display: inline-block; /* Use inline-block to align divs horizontally */
+  width: 100%; /* Set width for each form group div */
+  margin-bottom: 10px; /* Add margin for spacing between form groups */
+  vertical-align: top; /* Align divs at the top of the container */
+}
+
+.form-box label {
+    display: block; /* Display label as block to place it above the input */
+    margin-bottom: 5px; /* Add margin between label and input for spacing */
+    font-size: 35px;
+    margin-top: 5px;
+    font-family: Roboto;
+    font-weight: bold;
+    color: #f8f9fa;
+    text-align: center;
+}
+
+.form-box input {
+    width: 100%; /* Set input width to 100% to fill the div */
+    border: 5px solid #615e55;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 5px solid #0d6efd;
+}
+
+.button {
+    clear: both; /* Clear float for form groups */
+    text-align: center; /* Center the button horizontally */
+    margin-top: 5px; /* Add margin for spacing between form groups */
+}
+
+
+.h1 {
+  float: left;
+  display: inline-block;
+  display: none;
+}
+
+.btn.btn-info.custom {
+  float: right;
+  display: inline-block;
+  font-family: "Lato";
+  font-weight: bold;
+  font-style: italic;
+  font-size: 23px;
+  border: 3px solid #1c83a6;
+  width: 60%;
+  margin-right: 25px;
+}
+
+.btn.btn-warning.custom {
+  float: right;
+  display: inline-block;
+  font-family: "Lato";
+  font-weight: bold;
+  font-style: italic;
+  font-size: 23px;
+  border: 3px solid #c26c04;
+  width: 60%;
+  margin-right: 25px
+}
+
+.btn.btn-light.custom {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Lato";
+  font-weight: bold;
+  font-style: italic;
+  font-size: 23px;
+  margin-bottom: 25px;
+  border: 2px solid #000000;
+}
+
+.btn.btn-success.custom {
+  font-size: 30px;
+  background: linear-gradient(90deg, rgba(255, 166, 0, 1), rgba(204, 122, 0, 1));
+  border: 10px solid #ffd700;
+  color: white;
+}
+
+.btn.btn-danger.custom {
+  font-size: 30px;
+  background: linear-gradient(90deg, rgba(231, 76, 60, 1), rgba(192, 57, 43, 1));
+  border: 10px solid #ff7452;
+}
+
+.btn.btn-light.custom-2 {
+  font-size: 30px;
+  border: 10px solid #9cccb9;
+  background-color: #000;
+  --bs-btn-color:#f8f9fa;
+}
+
+.btn.btn-light.copyright {
+  background-color: transparent;
+  border-color: transparent;
+  font-size: 45px;
+  color: #fff1f0;
+  font-family: Verdana;
+  font-style: italic;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  /* Winner and loser boxes */
+  .box {
+    display: inline-block;
+    position: relative;
+    width: 500px !important;
+    height: 600px !important;
+    margin: 50px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    padding: 20px;
+  }
+
+  /* Winner box */
+  .winner {
+    background: linear-gradient(90deg, rgba(255, 166, 0, 1), rgba(204, 122, 0, 1));
+  }
+
+  .winner .icon {
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .winner .icon i {
+    font-size: 50px;
+    color: #ffd700;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .winner h2 {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    font-size: 28px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .winner p {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    font-size: 18px;
+    text-align: center;
+    line-height: 1.5;
+    color: #fff;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .winner:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Loser box *   background: linear-gradient(90deg, #e74c3c, #c0392b);*/
+  .loser {
+    background: linear-gradient(90deg, rgba(231, 76, 60, 1), rgba(192, 57, 43, 1));
+  }
+  .loser .icon {
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /*.box {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    margin: 50px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    }*/
+
+    .loser .icon i {
+    font-size: 50px;
+    color: #cf8e7d;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .loser h2 {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    font-size: 28px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .loser p {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    font-size: 18px;
+    text-align: center;
+    line-height: 1.5;
+    color: #fff;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .loser:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Border colors */
+    .winner {
+      border: 15px solid #ffd700;
+    }
+
+    .loser {
+      border: 15px solid #ff7452;
+    }
+
+
+
+
+
+
+    .draw {
+      background: linear-gradient(90deg, rgba(80, 200, 120, 1), rgba(60, 160, 100, 1));
+      border: 10px solid rgba(81, 110, 79, 1);
+    }
+
+    .draw .icon {
+      position: absolute;
+      top: -50px;
+      left: calc(50% - 50px);
+      width: 100px;
+      height: 100px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .draw .icon i {
+      font-size: 50px;
+      color: #fff;
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .draw h2 {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      font-size: 28px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .draw p {
+      position: absolute;
+      top: 130px;
+      left: 0;
+      width: 100%;
+      font-size: 18px;
+      text-align: center;
+      line-height: 1.5;
+      color: #fff;
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .draw:hover {
+      transform: translateY(-10px);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .box {
+      display: inline-block;
+      width: 500px;
+      height: 600px;
+      margin: 50px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease-in-out;
+      padding: 20px;
+      border:
+    }

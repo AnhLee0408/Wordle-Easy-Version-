@@ -1,0 +1,575 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div style="background-size: cover; background-image: url('../static/wooden_background.jpg'); width: 100%; height: 100%;">
+
+    <h1 style="text-align: center; display: none; color: #e64427;" id="invalid_guess">Invalid input</h1>
+<div style="display: flex; width: 100%">
+    <h1 style="text-align: left; flex: 1; margin-left: 25px; margin-top: 10px; font-family: Source Sans Pro; font-weight: bold;" id="player_1_score">{{ player_1 }}: {{ score_1 }}</h1>
+    <div style="text-align: center; display: inline-block;">
+        {% set id = 0 %}
+        {% for i in range((guessed_word_length + 1) * guessed_word_length) %}
+        {% set id = loop.index0 + 1 %}
+        {% if id == 1 %}
+        <h1 style="text-align: center; display: inline-block; float: left; flex: 1; margin-top: 10px; color: #1b211a; font-family: Source Sans Pro; font-weight: bold; font-size: 70px; display: none; border: 10px solid #f0fff4;" id="show_word">{{ guessed_word }}</h1>
+        {% elif id == guessed_word_length + 1 %}
+        <h1 style="text-align: center; display: inline-block; float: left; flex: 1; margin-top: 10px; color: #1b211a; font-family: Source Sans Pro; font-weight: bold; font-size: 70px; display: none; border-left: 10px solid #f0fff4; border-top: 10px solid #f0fff4; border-bottom: 10px solid #f0fff4; border-right: none;" id="{{ id }}c" >{{ guessed_word }}</h1>
+        {% elif id == (guessed_word_length + 1) * guessed_word_length %}
+        <h1 style="text-align: center; display: inline-block; float: left; flex: 1; margin-top: 10px; color: #1b211a; font-family: Source Sans Pro; font-weight: bold; font-size: 70px; display: none; border-left: none; border-top: 10px solid #f0fff4; border-bottom: 10px solid #f0fff4; border-right: 10px solid #f0fff4;" id="{{ id }}c" >{{ guessed_word }}</h1>
+        {% elif id % (guessed_word_length + 1) == 0 %}
+        <h1 style="text-align: center; display: inline-block; float: left; flex: 1; margin-top: 10px; color: #1b211a; font-family: Source Sans Pro; font-weight: bold; font-size: 70px; display: none; border-left: none; border-top: 10px solid #f0fff4; border-bottom: 10px solid #f0fff4; border-right: none;" id="{{ id }}c" >{{ guessed_word }}</h1>
+        {% endif %}
+        {% endfor%}
+    </div>
+    <h1 style="text-align: right; flex: 1; margin-right: 25px; margin-top: 10px; font-family: Source Sans Pro; font-weight: bold;" id="player_2_score">{{ player_2 }}: {{ score_2 }}</h1>
+</div>
+<div class="btn btn-light custom" id="hints">This word has {{ guessed_word_length }} letters.</div>
+<div class="btn btn-light custom" id="bigger_hints" style="display: none;">{{ count_letters }}</div>
+
+<div style="position: absolute; left: 50%; transform: translateX(-50%); margin-top: 25px; width: 50%; background-color:#d1c097; display: block; border: 3px solid black; padding-top: 10px; border-radius: 10px; display: none;" id="guesses-box">
+    {% set count_id = 0 %}
+    {% for i in range((guessed_word_length + 1) * guessed_word_length) %}
+    {% set count_id = loop.index0 + 1 %}
+    {% if count_id == 1 %}
+    <h1 class="h1" id="1"  style="margin-left: 25px;"></h1>
+    {% else %}
+        {% if count_id % (guessed_word_length + 1) == 1 %}
+    <h1 class="h1" style="clear: both; margin-left: 25px;" id="{{ count_id }}"></h1>
+        {% else %}
+    <h1 class="h1" id="{{ count_id }}"></h1>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+
+
+
+<div style="display: flex; margin-top: 0px; position: relative; left: 10%" id="guess_box">
+    <div style="text-align: left; margin-left: 30px; flex: 1">
+        <div class="guess-box" id="guess_box_1">
+            <div class="form-box">
+                <form>
+                    <label for="player1_input"> {{ player_1 }} please guess!</label>
+                    <input name="player1_input" id="player1_input" type="text" autocomplete="off">
+                </form>
+                <div class="button">
+                    <button type="button" id="player1_guess" class="btn btn-primary" style="font-size: 30px;" onclick="guess_1()">Guess</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: right; flex: 1; margin-right: 30px;">
+        <div class="guess-box" id="guess_box_2">
+            <div class="form-box">
+                <form>
+                    <label for="player2_input">{{ player_2 }} please guess!</label>
+                    <input name="player2_input" id="player2_input" type="text" autocomplete="off">
+                </form>
+                <div class="button">
+                    <button type="button" id="player2_guess" class="btn btn-primary" style="font-size: 30px;" onclick="guess_2()">Guess</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="display: inline-block; display: none; position: relative; left: 18%; transform: transformX(-50%); margin-top: 0px; width: 100%; margin-left: 0px" id="show_result">
+    <div class="box winner">
+        <div class="icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h2 style="border: 3px solid black; background-color: #2e2b2a; color: orange;">Winner</h2>
+        <p id="winner_name" style="font-family: Bungee; font-size: 40px; font-weight: bold; font-style: italic; color: #000000;">Congratulations on your victory!</p>
+        <img src="{{ url_for('static', filename='winner_cup.png') }}" alt="champion_cup" style="width: 300px; height: 394px; margin-top: 150px; margin-left: 60px;">
+      </div>
+
+      <div class="box loser">
+        <div class="icon">
+          <i class="fas fa-thumbs-down"></i>
+        </div>
+        <h2 style="border: 3px solid black; background-color: #2e2b2a; color: red;">Loser</h2>
+        <p id="loser_name" style="font-family: Bungee; font-size: 40px; font-weight: bold; font-style: italic; color: #000000;">Don't give up! Try again next time.</p>
+        <img src="{{ url_for('static', filename='loser_cup.png') }}" alt="champion_cup" style="width: 450px; height: 550px; margin-top: 80px; margin-left: 0px;">
+      </div>
+</div>
+
+<div style="display: inline-block; display: none; position: relative; left: 18%; transform: transformX(-50%); margin-top: 0px; width: 100%; margin-left: 0px;" id="show_result_2">
+      <div class="box loser">
+        <div class="icon">
+          <i class="fas fa-thumbs-down"></i>
+        </div>
+        <h2 style="border: 3px solid black; background-color: #2e2b2a; color: red;">Loser</h2>
+        <p id="loser_name_2" style="font-family: Bungee; font-size: 40px; font-weight: bold; font-style: italic; color: #000000;">Don't give up! Try again next time.</p>
+        <img src="{{ url_for('static', filename='loser_cup.png') }}" alt="champion_cup" style="width: 450px; height: 550px; margin-top: 80px; margin-left: 0px;">
+      </div>
+
+      <div class="box winner">
+        <div class="icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h2 style="border: 3px solid black; background-color: #2e2b2a; color: orange;">Winner</h2>
+        <p id="winner_name_2" style="font-family: Bungee; font-size: 40px; font-weight: bold; font-style: italic; color: #000000;">Congratulations on your victory!</p>
+        <img src="{{ url_for('static', filename='winner_cup.png') }}" alt="champion_cup" style="width: 300px; height: 394px; margin-top: 150px; margin-left: 60px;">
+      </div>
+</div>
+
+
+
+
+
+<div style="display: inline-block; display: none; position: relative; left: 27%; transform: transformX(-50%); margin-top: 0px;" id="draw_result">
+    <div class="box draw">
+        <div class="icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h2 style="border: 3px solid black; background-color: #2e2b2a; color: white;">It's a draw!</h2>
+        <p id="draw" style="font-family: Bungee; font-size: 40px; font-weight: bold; font-style: italic; color: #000000;">Lets have a handshake!</p>
+        <img src="{{ url_for('static', filename='draw.png') }}" alt="champion_cup" style="width: 300px; height: 225px; margin-top: 225px; margin-left: 70px;">
+      </div>
+</div>
+
+<div style="text-align: center; margin-top: 50px; display: none;" id="restart">
+    <form action="/">
+        <button type="submit" class="btn btn-light" style="font-size: 50px;">Play again</button>
+    </form>
+</div>
+<div style="text-align :center; margin-top: 25px;">
+    <h1 class="btn btn-light copyright">&copy; 2023 Duyanh,Inc.</h1>
+</div>
+<h1 style="text-align: center; color: white; display: none;" id="test"></h1>
+</div>
+
+<script>
+    const red = '#f75c5c'
+    const yellow = '#f7f448'
+    const green = '#33d436'
+
+    const regex = /^[a-zA-Z]+$/
+    const dict_guessed_word = {}
+
+    let restart = document.getElementById("restart")
+
+    let success = false
+    let guessed_char = []
+
+    let guessed_word = "{{ guessed_word }}"
+    let show_word = document.getElementById("show_word")
+
+    let guess_box_1 = document.getElementById("guess_box_1")
+    let guess_box_2 = document.getElementById("guess_box_2")
+
+
+    let guesses_box_height = 0
+    let draw_result = document.getElementById("draw_result")
+
+    let winner_name = document.getElementById("winner_name")
+    let loser_name = document.getElementById("loser_name")
+    let winner_name_2 = document.getElementById("winner_name_2")
+    let loser_name_2 = document.getElementById("loser_name_2")
+
+
+    let hints = document.getElementById("hints")
+    let guesses_box = document.getElementById("guesses-box")
+    let test = document.getElementById("test")
+
+    let count_tries = 0
+    let count_id = 1
+    let char_index = 0
+
+
+    let guess_box = document.getElementById("guess_box")
+    let show_result = document.getElementById("show_result")
+    let show_result_2 = document.getElementById("show_result_2")
+
+    let score_1 = 0
+    let score_2 = 0
+
+    let player1_score = document.getElementById("player_1_score")
+    let player2_score = document.getElementById("player_2_score")
+
+    let player1_guess = document.getElementById("player1_guess")
+    let player2_guess = document.getElementById("player2_guess")
+
+    let player1_input = document.getElementById("player1_input")
+    let player2_input = document.getElementById("player2_input")
+
+
+    let invalid_guess = document.getElementById("invalid_guess")
+    function get_height() {
+        if (count_id % (guessed_word.length + 1) == 1) {
+        guesses_box_height = guesses_box.offsetHeight
+       }
+    }
+
+
+    if (score_1 == 0 && score_2 == 0) {
+        player2_score.setAttribute("class", "btn btn-light custom-2")
+        player1_score.setAttribute("class", "btn btn-light custom-2")
+    }
+
+    function compare_score() {
+        if (score_1 > score_2) {
+            player1_score.setAttribute("class", "btn btn-success custom")
+            player2_score.setAttribute("class", "btn btn-danger custom")
+            guess_box_1.style.background = "linear-gradient(90deg, rgba(255, 166, 0, 1), rgba(204, 122, 0, 1))"
+            guess_box_1.style.border = '10px solid #ffd700'
+
+            guess_box_2.style.background = 'linear-gradient(90deg, rgba(231, 76, 60, 1), rgba(192, 57, 43, 1))'
+            guess_box_2.style.border = '10px solid #ff7452'
+
+
+        }
+        else if (score_1 < score_2) {
+            player2_score.setAttribute("class", "btn btn-success custom")
+            player1_score.setAttribute("class", "btn btn-danger custom")
+
+            guess_box_2.style.background = 'linear-gradient(90deg, rgba(255, 166, 0, 1), rgba(204, 122, 0, 1))'
+            guess_box_2.style.border = '10px solid #ffd700'
+
+            guess_box_1.style.background = 'linear-gradient(90deg, rgba(231, 76, 60, 1), rgba(192, 57, 43, 1))'
+            guess_box_1.style.border = '10px solid #ff7452'
+
+
+        }
+        else {
+            player2_score.setAttribute("class", "btn btn-light custom-2")
+            player1_score.setAttribute("class", "btn btn-light custom-2")
+
+            guess_box_2.style.background = '#000'
+            guess_box_2.style.border = '10px solid #9cccb9'
+
+            guess_box_1.style.background = '#000'
+            guess_box_1.style.border = '10px solid #9cccb9'
+        }
+    }
+
+    if ("{{ go_first }}" == "{{ player_1 }}") {
+        player2_input.disabled = true
+        player2_input.style.backgroundColor = '#7a776f'
+        player2_guess.disabled = true
+    }
+    else {
+        player1_input.disabled = true
+        player1_input.style.backgroundColor = '#7a776f'
+        player1_guess.disabled = true
+    }
+
+    for (let i = 0; i < guessed_word.length; i++) {
+        dict_guessed_word[i] = guessed_word[i]
+    }
+
+    function guess_1() {
+        let value = player1_input.value
+        if (!regex.test(value) || value.length != "{{ guessed_word_length }}") {
+            invalid_guess.style.display = 'block'
+        }
+        else {
+            let count_green_char = 0
+            let temp_score = 0
+            value = value.toLowerCase()
+            get_height()
+            guess_box.style.marginTop = `${guesses_box_height + 70}px`
+            for (let i = 0; i < value.length; i++) {
+                if (Object.values(dict_guessed_word).includes(value[i])) {
+                    if (dict_guessed_word[i] == value[i]) {
+                        let char = document.getElementById(count_id)
+                        get_height()
+                        char.textContent = value[i]
+                        char.style.display = 'block'
+                        char.style.backgroundColor = green
+                        char.style.display = 'inline-block'
+                        count_id += 1
+                        score_1 += 2
+                        temp_score += 2
+                        player1_score.textContent = "{{ player_1 }}" + ": " + score_1
+                        count_green_char += 1
+                        guesses_box.style.display = 'block'
+                    }
+                    else {
+                        let char = document.getElementById(count_id)
+                        get_height()
+                        char.textContent = value[i]
+                        char.style.display = 'block'
+                        char.style.backgroundColor = yellow
+                        char.style.display = 'inline-block'
+                        count_id += 1
+                        score_1 += 1
+                        temp_score += 1
+                        player1_score.textContent = "{{ player_1 }}" + ": " + score_1
+                        guesses_box.style.display = 'block'
+                    }
+                }
+                else {
+                    let char = document.getElementById(count_id)
+                    get_height()
+                    char.textContent = value[i]
+                    char.style.display = 'block'
+                    char.style.backgroundColor = red
+                    char.style.display = 'inline-block'
+                    count_id += 1
+                    guesses_box.style.display = 'block'
+                }
+            }
+            compare_score()
+            if (count_green_char == value.length) {
+                /*guessed_word.style.display = 'block';*/
+                show_word.style.display = 'block'
+                show_word.style.backgroundColor = green
+                success = true
+
+                for (let id in guessed_char) {
+                    test.textContent += guessed_char[id]
+                    let char = document.getElementById(guessed_char[id])
+                    char.style.display = 'none'
+                }
+
+                hints.style.display = 'none'
+
+                show_result.style.display = 'block'
+                guess_box.style.display = 'none'
+
+                show_result.style.marginTop = `${guesses_box_height + 70}px`
+
+                winner_name.textContent = "{{ player_1 }}"
+                loser_name.textContent = "{{ player_2 }}"
+                restart.style.display = 'block'
+
+
+
+            }
+            else {
+                player2_input.disabled = false
+                player2_input.style.backgroundColor = '#ffffff'
+                player2_guess.disabled = false
+
+                player1_input.disabled = true
+                player1_input.style.backgroundColor = '#7a776f'
+                player1_input.value = ""
+                player1_guess.disabled = true
+                invalid_guess.style.display = 'none'
+
+            }
+            count_tries += 1
+            if (count_tries == "{{ guessed_word_length }}") {
+                player1_input.disabled = true
+                player1_input.style.backgroundColor = '#7a776f'
+                player1_input.value = ""
+                player1_guess.disabled = true
+
+                player2_input.disabled = true
+                player2_input.style.backgroundColor = '#7a776f'
+                player2_input.value = ""
+                player2_guess.disabled = true
+                hints.style.display = 'none'
+
+
+
+                if (score_1 > score_2) {
+                    winner_name.textContent = "{{ player_1 }}"
+                    loser_name.textContent = "{{ player_2 }}"
+                    show_result.style.display = 'block'
+                    guess_box.style.display = 'none'
+                    show_result.style.marginTop = `${guesses_box_height + 70}px`
+                    restart.style.display = 'block'
+
+                }
+                else if (score_1 <score_2) {
+                    winner_name_2.textContent = "{{ player_2 }}"
+                    loser_name_2.textContent = "{{ player_1 }}"
+                    show_result_2.style.display = 'block'
+                    guess_box.style.display = 'none'
+                    show_result_2.style.marginTop = `${guesses_box_height + 70}px`
+                    restart.style.display = 'block'
+
+                }
+                else {
+                    draw_result.style.marginTop = `${guesses_box_height + 70}px`
+                    draw_result.style.display = 'block'
+                    show_result.style.display = 'none'
+                    guess_box.style.display = 'none'
+                    restart.style.display = 'block'
+
+                }
+
+
+
+
+            }
+            let show_name = document.getElementById(count_id)
+            show_name.setAttribute("class", "btn btn-info custom")
+            show_name.textContent = "{{ player_1 }}" + ": " + temp_score
+            if (!success) {
+                if (count_id == (guessed_word.length + 1) * count_tries) {
+                let new_id = count_id + "c"
+                let char = document.getElementById(new_id)
+                char.textContent = guessed_word[char_index]
+                char.style.display = 'block'
+                char.style.backgroundColor = green
+                char_index += 1
+                guessed_char.push(new_id)
+            }
+            }
+            count_id += 1
+
+
+        }
+
+    }
+
+
+    function guess_2() {
+        let value = player2_input.value
+        if (!regex.test(value) || value.length != "{{ guessed_word_length }}") {
+            invalid_guess.style.display = 'block'
+        }
+        else {
+            let count_green_char = 0
+            let temp_score = 0
+            value = value.toLowerCase()
+            get_height()
+            guess_box.style.marginTop = `${guesses_box_height + 70}px`
+            for (let i = 0; i < value.length; i++) {
+                if (Object.values(dict_guessed_word).includes(value[i])) {
+                    if (dict_guessed_word[i] == value[i]) {
+                        let char = document.getElementById(count_id)
+                        get_height()
+                        char.textContent = value[i]
+                        char.style.display = 'block'
+                        char.style.backgroundColor = green
+                        char.style.display = 'inline-block'
+                        count_id += 1
+                        score_2 += 2
+                        player2_score.textContent = "{{ player_2 }}" + ": " + score_2
+                        count_green_char += 1
+                        temp_score += 2
+                        guesses_box.style.display = 'block'
+                    }
+                    else {
+                        let char = document.getElementById(count_id)
+                        get_height()
+                        char.textContent = value[i]
+                        char.style.display = 'block'
+                        char.style.backgroundColor = yellow
+                        char.style.display = 'inline-block'
+                        count_id += 1
+                        score_2 += 1
+                        player2_score.textContent = "{{ player_2 }}" + ": " + score_2
+                        temp_score += 1
+                        guesses_box.style.display = 'block'
+                    }
+                }
+                else {
+                    let char = document.getElementById(count_id)
+                    get_height()
+                    char.textContent = value[i]
+                    char.style.display = 'block'
+                    char.style.backgroundColor = red
+                    char.style.display = 'inline-block'
+                    count_id += 1
+                    guesses_box.style.display = 'block'
+                }
+            }
+            compare_score()
+            if (count_green_char == value.length) {
+                /*guessed_word.style.display = 'block';*/
+                show_word.style.display = 'block'
+                show_word.style.backgroundColor = green
+                success = true
+                for (let id in guessed_char) {
+                    test.textContent += guessed_char[id]
+                    let char = document.getElementById(guessed_char[id])
+                    char.style.display = 'none'
+                }
+
+                hints.style.display = 'none'
+
+                show_result_2.style.display = 'block'
+                guess_box.style.display = 'none'
+                show_result_2.style.marginTop = `${guesses_box_height + 70}px`
+
+                winner_name_2.textContent = "{{ player_2 }}"
+                loser_name_2.textContent = "{{ player_1 }}"
+
+                restart.style.display = 'block'
+
+            }
+            else {
+                player1_input.disabled = false
+                player1_input.style.backgroundColor = '#ffffff'
+                player1_guess.disabled = false
+
+                player2_input.disabled = true
+                player2_input.style.backgroundColor = '#7a776f'
+                player2_input.value = ""
+                player2_guess.disabled = true
+                invalid_guess.style.display = 'none'
+            }
+            count_tries += 1
+            if (count_tries == "{{ guessed_word_length }}") {
+                player1_input.disabled = true
+                player1_input.style.backgroundColor = '#7a776f'
+                player1_input.value = ""
+                player1_guess.disabled = true
+
+                player2_input.disabled = true
+                player2_input.style.backgroundColor = '#7a776f'
+                player2_input.value = ""
+                player2_guess.disabled = true
+
+                hints.style.display = 'none'
+
+
+
+                if (score_1 > score_2) {
+                    winner_name.textContent = "{{ player_1 }}"
+                    loser_name.textContent = "{{ player_2 }}"
+                    show_result.style.display = 'block'
+                    guess_box.style.display = 'none'
+                    show_result.style.marginTop = `${guesses_box_height + 70}px`
+                    restart.style.display = 'block'
+
+                }
+                else if (score_1 <score_2) {
+                    winner_name_2.textContent = "{{ player_2 }}"
+                    loser_name_2.textContent = "{{ player_1 }}"
+                    show_result_2.style.display = 'block'
+                    guess_box.style.display = 'none'
+                    show_result_2.style.marginTop = `${guesses_box_height + 70}px`
+                    restart.style.display = 'block'
+
+                }
+                else {
+                    draw_result.style.marginTop = `${guesses_box_height + 70}px`
+                    draw_result.style.display = 'block'
+                    show_result.style.display = 'none'
+                    guess_box.style.display = 'none'
+                    restart.style.display = 'block'
+                }
+
+            }
+            let show_name = document.getElementById(count_id)
+            show_name.setAttribute("class", "btn btn-warning custom")
+            show_name.textContent = "{{ player_2 }}" + ": " + temp_score
+            if (!success) {
+                if (count_id == (guessed_word.length + 1) * count_tries) {
+                let new_id = count_id + "c"
+                let char = document.getElementById(new_id)
+                char.textContent = guessed_word[char_index]
+                char.style.display = 'block'
+                char.style.backgroundColor = green
+                char_index += 1
+                guessed_char.push(new_id)
+            }
+            }
+
+            count_id += 1
+        }
+    }
+
+    /*for (key in dict_guessed_word) {
+        test.textContent += key + ": " + dict_guessed_word[key]
+    }*/
+</script>
+{% endblock %}
